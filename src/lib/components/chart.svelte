@@ -1,57 +1,43 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { CrosshairMode } from 'lightweight-charts';
+	import { Chart, CandlestickSeries } from 'svelte-lightweight-charts';
+	import { data } from '$lib/priceData';
 
-	function getLanguageFromURL() {
-		const regex = new RegExp('[\\?&]lang=([^&#]*)');
-		const results = regex.exec(window.location.search);
-		return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
-	}
-
-	export let symbol = 'AAPL';
-	export let interval = 'D';
-	export let datafeedUrl = 'https://demo_feed.tradingview.com';
-	export let libraryPath = '/charting_library/';
-	export let chartsStorageUrl = 'https://saveload.tradingview.com';
-	export let chartsStorageApiVersion = '22.032';
-	export let clientId = 'tradingview.com';
-	export let userId = 'public_user_id';
-	export let fullscreen = false;
-	export let autosize = true;
-	export let studiesOverrides = {};
-
-	let chartContainer;
-	let tvWidget = null;
-
-	onMount(async () => {
-		console.log(window.Datafeeds);
-
-		const { widget } = await import('$lib/charting_library');
-
-		new window.Datafeeds.UDFCompatibleDatafeed(datafeedUrl);
-		const widgetOptions = {
-			symbol,
-			datafeed: new window.Datafeeds.UDFCompatibleDatafeed(datafeedUrl),
-			interval: interval,
-			container: chartContainer,
-			library_path: libraryPath,
-			locale: getLanguageFromURL() || 'en',
-			disabled_features: ['use_localstorage_for_settings'],
-			enabled_feeatures: ['study_templates'],
-			charts_storage_url: chartsStorageUrl,
-			charts_storage_api_version: chartsStorageApiVersion,
-			client_id: clientId,
-			user_id: userId,
-			fullscreen: fullscreen,
-			autosize: autosize,
-			studies_overrides: studiesOverrides,
-			debug: true
-		};
-		tvWidget = new widget(widgetOptions);
-	});
+	const options = {
+		width: 600,
+		height: 300,
+		layout: {
+			backgroundColor: '#000000',
+			textColor: 'rgba(255, 255, 255, 0.9)'
+		},
+		grid: {
+			vertLines: {
+				color: 'rgba(197, 203, 206, 0.5)'
+			},
+			horzLines: {
+				color: 'rgba(197, 203, 206, 0.5)'
+			}
+		},
+		crosshair: {
+			mode: CrosshairMode.Normal
+		},
+		rightPriceScale: {
+			borderColor: 'rgba(197, 203, 206, 0.8)'
+		},
+		timeScale: {
+			borderColor: 'rgba(197, 203, 206, 0.8)'
+		}
+	};
 </script>
 
-<svelte:head>
-	<script src="/datafeeds/udf/dist/bundle.js"></script>
-</svelte:head>
-
-<div class="TVChartContainer h-screen" bind:this={chartContainer} />
+<Chart {...options}>
+	<CandlestickSeries
+		{data}
+		upColor="rgba(255, 144, 0, 1)"
+		downColor="#000"
+		borderDownColor="rgba(255, 144, 0, 1)"
+		borderUpColor="rgba(255, 144, 0, 1)"
+		wickDownColor="rgba(255, 144, 0, 1)"
+		wickUpColor="rgba(255, 144, 0, 1)"
+	/>
+</Chart>
