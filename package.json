@@ -32,6 +32,6 @@
 	"type": "module",
 	"dependencies": {
 		"lightweight-charts": "^3.8.0",
-		"svelte-lightweight-charts": "^1.6.3"
+		"svelte-lightweight-charts": "^1.7.0-next.0"
 	}
 }

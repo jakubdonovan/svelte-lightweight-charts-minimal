@@ -1,7 +1,7 @@
 <script>
 	import { CrosshairMode } from 'lightweight-charts';
 	import { Chart, CandlestickSeries } from 'svelte-lightweight-charts';
-	import { data } from '$lib/priceData';
+	import { priceData } from '$lib/priceData';
 
 	const options = {
 		width: 600,
@@ -32,7 +32,7 @@
 
 <Chart {...options}>
 	<CandlestickSeries
-		{data}
+		{priceData}
 		upColor="rgba(255, 144, 0, 1)"
 		downColor="#000"
 		borderDownColor="rgba(255, 144, 0, 1)"

@@ -6,7 +6,7 @@ const config = {
 	kit: {
 		prerender: { default: true },
 		ssr: {
-			noExternal: ['lightweight-charts']
+			noExternal: ['svelte-lightweight-charts', 'lightweight-charts']
 		}
 	}
 };
