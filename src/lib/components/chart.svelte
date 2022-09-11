@@ -1,43 +1,83 @@
 <script>
 	import { CrosshairMode } from 'lightweight-charts';
-	import { Chart, CandlestickSeries } from 'svelte-lightweight-charts';
-	import { priceData } from '$lib/priceData';
+	import { Chart, CandlestickSeries, PriceLine, PriceScale, TimeScale } from 'svelte-lightweight-charts';
+	import { data } from '$lib/priceData.js';
 
-	const options = {
+	let observer;
+
+	let ref = (element) => {
+		if (observer) {
+			observer.disconnect();
+		}
+		if (!element) {
+			return;
+		}
+		observer = new ResizeObserver(([entry]) => {
+			chartOptions.width = entry.contentRect.width;
+			chartOptions.height = entry.contentRect.height;
+		});
+		observer.observe(element);
+	};
+
+	const chartOptions = {
+		container: { ref },
 		width: 600,
-		height: 300,
+		height: 400,
 		layout: {
-			backgroundColor: '#000000',
-			textColor: 'rgba(255, 255, 255, 0.9)'
+			backgroundColor: 'rgba(255, 255, 255, 0)',
+			textColor: '#ccc'
 		},
 		grid: {
 			vertLines: {
-				color: 'rgba(197, 203, 206, 0.5)'
+				visible: true,
+				color: 'rgba(35, 38, 59, 1)',
+				style: 2
 			},
 			horzLines: {
-				color: 'rgba(197, 203, 206, 0.5)'
+				visible: true,
+				color: 'rgba(35, 38, 59, 1)',
+				style: 2
 			}
 		},
 		crosshair: {
-			mode: CrosshairMode.Normal
-		},
-		rightPriceScale: {
-			borderColor: 'rgba(197, 203, 206, 0.8)'
+			horzLine: {
+				color: '#aaa'
+			},
+			vertLine: {
+				color: '#aaa'
+			},
+			mode: 0
 		},
 		timeScale: {
-			borderColor: 'rgba(197, 203, 206, 0.8)'
+			// https://github.com/tradingview/lightweight-charts/blob/master/docs/time-scale.md#time-scale
+			rightOffset: 5,
+			borderVisible: false,
+			barSpacing: 5,
+			timeVisible: true,
+			fixLeftEdge: true
+		},
+		priceScale: {
+			// https://github.com/tradingview/lightweight-charts/blob/master/docs/customization.md#price-axis
+			borderVisible: false
 		}
+	};
+
+	const seriesOptions = {
+		// https://github.com/tradingview/lightweight-charts/blob/master/docs/area-series.md
+		reactive: true,
+		lineColor: '#5472cc',
+		topColor: 'rgba(49, 69, 131, 0.4)',
+		bottomColor: 'rgba(42, 64, 103, 0.0)',
+		lineWidth: 2,
+		priceLineColor: '#3a3e5e',
+		downColor: '#fa3c58',
+		wickDownColor: '#fa3c58',
+		upColor: '#0ecc83',
+		wickUpColor: '#0ecc83',
+		borderVisible: false
 	};
 </script>
 
-<Chart {...options}>
-	<CandlestickSeries
-		{priceData}
-		upColor="rgba(255, 144, 0, 1)"
-		downColor="#000"
-		borderDownColor="rgba(255, 144, 0, 1)"
-		borderUpColor="rgba(255, 144, 0, 1)"
-		wickDownColor="rgba(255, 144, 0, 1)"
-		wickUpColor="rgba(255, 144, 0, 1)"
-	/>
+<Chart {...chartOptions}>
+	<CandlestickSeries {data} {seriesOptions} />
 </Chart>
