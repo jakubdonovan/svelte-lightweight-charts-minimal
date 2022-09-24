@@ -9,7 +9,7 @@
 		{#if !isEmpty($tokens)}
 			{#each Object.values($tokens) as token}
 				{#if !isEmpty(token.coingecko_data || {})}
-					<TokenCard prices={token.coingecko_data.prices} />
+					<TokenCard id={token.coingecko_data.id} prices={token.coingecko_data.prices} />
 				{/if}
 			{/each}
 		{/if}

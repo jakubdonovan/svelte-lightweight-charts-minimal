@@ -1,8 +1,9 @@
 <script>
 	import Sparkline from '$lib/components/Sparkline.svelte';
-	export let prices;
+	export let id, prices;
 </script>
 
-<div class="flex justify-between rounded-lg p-3 shadow-sm bg-white">
+<div class="flex flex-col items-center gap-2 rounded-lg p-2 shadow-sm bg-white text-gray-600 text-xs">
+	{id}
 	<Sparkline data={prices} />
 </div>
